@@ -482,7 +482,7 @@ type Reserve @entity {
   deposits: [Deposit!]! @derivedFrom(field: "reserve")
 }
 
-type WETHReserve @entity {
+type WXDAIReserve @entity {
   """
   weth address
   """

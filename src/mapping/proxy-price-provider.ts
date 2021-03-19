@@ -4,7 +4,7 @@ import {
   AssetSourceUpdated,
   FallbackOracleUpdated,
   AaveOracle,
-  WethSet,
+  WrappedNativeSet,
 } from '../../generated/AaveOracle/AaveOracle';
 import { IExtendedPriceAggregator } from '../../generated/AaveOracle/IExtendedPriceAggregator';
 import { GenericOracleI as FallbackPriceOracle } from '../../generated/AaveOracle/GenericOracleI';
@@ -35,21 +35,21 @@ import {
 } from '../utils/converters';
 import { MOCK_USD_ADDRESS, ZERO_ADDRESS } from '../utils/constants';
 import { genericPriceUpdate, usdEthPriceUpdate } from '../helpers/price-updates';
-import { PriceOracle, PriceOracleAsset, WETHReserve } from '../../generated/schema';
+import { PriceOracle, PriceOracleAsset, WXDAIReserve } from '../../generated/schema';
 
-export function handleWethSet(event: WethSet): void {
-  let wethAddress = event.params.weth;
-  let weth = WETHReserve.load('weth');
-  if (weth == null) {
-    weth = new WETHReserve('weth');
+export function handleWrappedNativeSet(event: WrappedNativeSet): void {
+  let wrappedNativeAddress = event.params.wrappedNative;
+  let wxdai = WXDAIReserve.load('wxdai');
+  if (wxdai == null) {
+    wxdai = new WXDAIReserve('wxdai');
   }
-  weth.address = wethAddress;
-  weth.name = 'WEthereum';
-  weth.symbol = 'WETH';
-  weth.decimals = 18;
-  weth.updatedTimestamp = event.block.timestamp.toI32();
-  weth.updatedBlockNumber = event.block.number;
-  weth.save();
+  wxdai.address = wrappedNativeAddress;
+  wxdai.name = 'Wrapped XDAI';
+  wxdai.symbol = 'WXDAI';
+  wxdai.decimals = 18;
+  wxdai.updatedTimestamp = event.block.timestamp.toI32();
+  wxdai.updatedBlockNumber = event.block.number;
+  wxdai.save();
 }
 
 export function handleFallbackOracleUpdated(event: FallbackOracleUpdated): void {

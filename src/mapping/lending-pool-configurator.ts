@@ -34,7 +34,7 @@ import {
   getOrInitReserveConfigurationHistoryItem,
   getPriceOracleAsset,
 } from '../helpers/initializers';
-import { Reserve, WETHReserve } from '../../generated/schema';
+import { Reserve, WXDAIReserve } from '../../generated/schema';
 import { exponentToBigInt, zeroAddress, zeroBI } from '../utils/converters';
 
 function saveReserve(reserve: Reserve, event: ethereum.Event): void {
@@ -81,9 +81,9 @@ export function handleReserveInitialized(event: ReserveInitialized): void {
   let underlyingAssetAddress = event.params.asset; //_reserve;
   let reserve = getOrInitReserve(underlyingAssetAddress, event);
 
-  let weth = WETHReserve.load('weth');
+  let wxdai = WXDAIReserve.load('wxdai');
 
-  if (weth == null || weth.address.toHexString() != reserve.underlyingAsset.toHexString()) {
+  if (wxdai == null || wxdai.address.toHexString() != reserve.underlyingAsset.toHexString()) {
     let ERC20ATokenContract = IERC20Detailed.bind(event.params.aToken);
     let ERC20ReserveContract = IERC20Detailed.bind(underlyingAssetAddress);
     let ERC20DetailedBytesContract = IERC20DetailedBytes.bind(underlyingAssetAddress);
@@ -104,9 +104,9 @@ export function handleReserveInitialized(event: ReserveInitialized): void {
 
     reserve.decimals = ERC20ReserveContract.decimals();
   } else {
-    reserve.name = weth.name;
-    reserve.symbol = weth.symbol;
-    reserve.decimals = weth.decimals;
+    reserve.name = wxdai.name;
+    reserve.symbol = wxdai.symbol;
+    reserve.decimals = wxdai.decimals;
 
     let oracleAsset = getPriceOracleAsset(reserve.underlyingAsset.toHexString());
     oracleAsset.priceInEth = exponentToBigInt(18);

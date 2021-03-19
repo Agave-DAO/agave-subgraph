@@ -34,8 +34,8 @@ dataSources:
           handler: handleAssetSourceUpdated
         - event: FallbackOracleUpdated(indexed address)
           handler: handleFallbackOracleUpdated
-        - event: WethSet(indexed address)
-          handler: handleWethSet
+        - event: WrappedNativeSet(indexed address)
+          handler: handleWrappedNativeSet
       file: src/mapping/proxy-price-provider.ts
 
   - kind: ethereum/contract

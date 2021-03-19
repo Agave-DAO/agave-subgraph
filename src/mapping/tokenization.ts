@@ -35,7 +35,7 @@ import {
 } from '../helpers/initializers';
 import { zeroBI } from '../utils/converters';
 import { calculateUtilizationRate } from '../helpers/reserve-logic';
-import { Address, BigInt, ethereum } from '@graphprotocol/graph-ts';
+import { Address, BigInt, ethereum, log } from '@graphprotocol/graph-ts';
 import { rayDiv, rayMul } from '../helpers/math';
 
 function saveUserReserveAHistory(
