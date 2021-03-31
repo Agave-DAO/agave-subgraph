@@ -4,9 +4,9 @@ module.exports = {
     optimizer: {enabled: true, runs: 200},
     evmVersion: 'istanbul',
   },
-  defaultNetwork: 'buidlerevm',
+  defaultNetwork: 'hardhat',
   networks: {
-    buidlerevm: {
+    hardhat: {
       hardfork: 'istanbul',
       blockGasLimit: 12000000,
       gas: 12000000,

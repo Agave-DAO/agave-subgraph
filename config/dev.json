@@ -1,5 +1,5 @@
 {
-  "network": "buidlerevm",
+  "network": "hardhat",
   "AaveOracleAddress": "0x2dD8146Ad2138ac61F93E549f8F917927B47E28a",
   "AaveOracleStartBlock": 0,
   "ChainlinkSourcesRegistryAddress": "0x0000000000000000000000000000000000000000",
