@@ -7,11 +7,11 @@
     "update-abi-addresses": "npm run update-address && npm run prepare:abi",
     "prepare:all": "npm run prepare:contracts && npm run prepare:subgraph",
     "prepare:contracts": "npm run agave:install && npm run agave:compile-contracts",
-    "prepare:subgraph": "mustache ./config/${NETWORK:-dev}.json subgraph.template.yaml > subgraph.yaml",
+    "prepare:subgraph": "echo \"using ./config/${NETWORK:-dev}.json\" && mustache ./config/${NETWORK:-dev}.json subgraph.template.yaml > subgraph.yaml",
     "prepare:contracts:local": "npm run agave:install && npm run deploy-contracts && npm run update-address",
     "subgraph:codegen": "graph codegen --output-dir ./generated",
     "subgraph:build": "graph build",
-    "subgraph:create:local": "graph create aave/protocol-v2 --node http://localhost:8020",
+    "subgraph:create:local": "graph create $SLUG --node http://localhost:8020",
     "subgraph:create:self-hosted:kovan": "graph create aave/protocol-v2-kovan --node https://adm-thegraph.aave.com",
     "subgraph:create:self-hosted:mainnet": "graph create aave/protocol-v2 --node https://adm-thegraph.aave.com",
     "subgraph:deploy:local": "graph deploy $SLUG --ipfs http://localhost:5001 --node http://localhost:8020",
@@ -31,7 +31,7 @@
     "deploy:hosted:mainnet": "NETWORK=mainnet env-cmd npm run prepare:subgraph && SLUG=aave/protocol-v2 env-cmd npm run subgraph:deploy:hosted",
     "deploy:self-hosted:kovan": "NETWORK=kovan npm run prepare:subgraph && SLUG=aave/protocol-v2-kovan npm run subgraph:deploy:self-hosted",
     "deploy:self-hosted:mainnet": "NETWORK=mainnet npm run prepare:subgraph && SLUG=aave/protocol-v2 npm run subgraph:deploy:self-hosted",
-    "deploy:local:rinkeby": "NETWORK=rinkeby npm run prepare:subgraph && SLUG=agave/dev npm run subgraph:deploy:local",
+    "deploy:local:rinkeby": "NETWORK=rinkeby npm run prepare:subgraph && SLUG=agave/dev npm run subgraph:create:local && SLUG=agave/dev npm run subgraph:deploy:local",
     "run:rinkeby": "docker-compose down -v && docker-compose -f docker-compose.yml -f docker-compose.fork.rinkeby.yml -f docker-compose.override.yml up -V --build"
   },
   "repository": {
