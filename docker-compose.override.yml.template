@@ -1,0 +1,12 @@
+version: '3.5'
+
+services:
+  ganache:
+    # Override these env variables in your local docker-compose.overrides.yml file
+    environment:
+      # Required; Your Infura API key
+      INFURA_KEY: ""
+      # Optional; Secret for Infura if you have read RPCs locked down to require secrets
+      INFURA_SECRET: ""
+      # Optional; Used to specify a starting block; format: "@1234567"
+      FORK_BLOCK_SPEC: ""

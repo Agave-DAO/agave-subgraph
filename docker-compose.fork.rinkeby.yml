@@ -1,0 +1,25 @@
+version: "3.5"
+
+# Use this overrides file with a command such as the following:
+# docker-compose down -v && docker-compose -f docker-compose.yml -f docker-compose.fork.rinkeby.yml -f docker-compose.override.yml up -V --build
+services:
+  ethnode:
+    build:
+      context: ./dockerfiles/ganache
+      dockerfile: ./Dockerfile
+    # Override these env variables in your local docker-compose.override.yml file
+    environment:
+      # Endpoint that preceeds the ganache fork-block spec
+      RPC_ENDPOINT: "rinkeby.infura.io/v3/"
+      # Required; Your Infura API key, otherwise a suffix appended to RPC_ENDPOINT
+      INFURA_KEY: ""
+      # Optional; Secret for Infura if you have read RPCs locked down to require secrets
+      INFURA_SECRET: ""
+      # Optional; Used to specify a starting block; format: "@1234567"
+      FORK_BLOCK_SPEC: ""
+    ports:
+      - '8545:8545'
+  # tell graph-node rinkeby is at localhost
+  graph-node:
+    environment:
+      ethereum: 'rinkeby:http://ethnode:8545'

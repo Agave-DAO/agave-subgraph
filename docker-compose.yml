@@ -46,7 +46,7 @@ services:
     restart: always
     links:
       - "graph-postgres:db"
-      - "ethnode"
+      - "ethnode:ethnode"
     environment:
       <<: *graph-pg-base
       postgres_host: 'db'
@@ -78,8 +78,7 @@ services:
 
   ethnode:
     build:
-      context: ./hardhat_docker_image
+      context: ./dockerfiles/hardhat_docker_image
       dockerfile: ./Dockerfile
-    command: npx hardhat --config ./hardhat.config.js --network hardhat node --hostname 0.0.0.0 --port 8545
     ports:
       - '8545:8545'

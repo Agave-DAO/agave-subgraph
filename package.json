@@ -14,7 +14,7 @@
     "subgraph:create:local": "graph create aave/protocol-v2 --node http://localhost:8020",
     "subgraph:create:self-hosted:kovan": "graph create aave/protocol-v2-kovan --node https://adm-thegraph.aave.com",
     "subgraph:create:self-hosted:mainnet": "graph create aave/protocol-v2 --node https://adm-thegraph.aave.com",
-    "subgraph:deploy:local": "graph deploy aave/protocol-v2 --ipfs http://localhost:5001 --node http://localhost:8020",
+    "subgraph:deploy:local": "graph deploy $SLUG --ipfs http://localhost:5001 --node http://localhost:8020",
     "subgraph:deploy:self-hosted": "graph deploy $SLUG --ipfs https://ipfs-thegraph.aave.com --node https://adm-thegraph.aave.com",
     "subgraph:deploy:hosted": "graph deploy $SLUG --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/ --access-token $ACCESS_TOKEN",
     "agave:init": "git submodule update --init --recursive -- externals/protocol-v2",
@@ -25,12 +25,14 @@
     "deploy-contracts": "npm run agave:compile-contracts && npm run agave:deploy-contracts",
     "deploy-stack:local": "npm run prepare:all && npm run subgraph:local",
     "deploy-stack:local:scenario": "npm run agave:deploy:scenario && npm run update-abi-addresses && npm run prepare:subgraph && npm run subgraph:local",
-    "deploy-stack:local:post-scenario": "npm run update-abi-addresses && npm run prepare:subgraph && npm run subgraph:deploy:local",
+    "deploy-stack:local:post-scenario": "npm run update-abi-addresses && npm run prepare:subgraph && SLUG=agave/dev npm run subgraph:deploy:local",
     "deploy:hosted:kovan": "NETWORK=kovan env-cmd npm run prepare:subgraph && SLUG=aave/protocol-v2-kovan env-cmd npm run subgraph:deploy:hosted",
     "deploy:hosted:rinkeby": "NETWORK=rinkeby env-cmd npm run prepare:subgraph && SLUG=1hive/agave-rinkeby env-cmd npm run subgraph:deploy:hosted",
     "deploy:hosted:mainnet": "NETWORK=mainnet env-cmd npm run prepare:subgraph && SLUG=aave/protocol-v2 env-cmd npm run subgraph:deploy:hosted",
     "deploy:self-hosted:kovan": "NETWORK=kovan npm run prepare:subgraph && SLUG=aave/protocol-v2-kovan npm run subgraph:deploy:self-hosted",
-    "deploy:self-hosted:mainnet": "NETWORK=mainnet npm run prepare:subgraph && SLUG=aave/protocol-v2 npm run subgraph:deploy:self-hosted"
+    "deploy:self-hosted:mainnet": "NETWORK=mainnet npm run prepare:subgraph && SLUG=aave/protocol-v2 npm run subgraph:deploy:self-hosted",
+    "deploy:local:rinkeby": "NETWORK=rinkeby npm run prepare:subgraph && SLUG=agave/dev npm run subgraph:deploy:local",
+    "run:rinkeby": "docker-compose down -v && docker-compose -f docker-compose.yml -f docker-compose.fork.rinkeby.yml -f docker-compose.override.yml up -V --build"
   },
   "repository": {
     "type": "git",
