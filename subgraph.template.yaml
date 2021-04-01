@@ -1,6 +1,6 @@
-specVersion: 0.0.2
-description: Protocol v2 subgraph
-repository: https://github.com/aave/protocol-v2-subgraph
+specVersion: 0.0.3
+description: Agave Protocol v0
+repository: https://github.com/Agave-DAO/agave-subgraph/
 schema:
   file: ./schema.graphql
 dataSources:
