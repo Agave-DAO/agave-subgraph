@@ -68,7 +68,7 @@ type PriceHistoryItem @entity {
   timestamp: Int!
 }
 
-type UsdEthPriceHistoryItem @entity {
+type UsdNativePriceHistoryItem @entity {
   id: ID!
   oracle: PriceOracle!
   price: BigInt!
@@ -107,7 +107,7 @@ type PriceOracleAsset @entity {
   # underlying asset address
   id: ID!
   oracle: PriceOracle!
-  priceInEth: BigInt!
+  priceInNative: BigInt!
   priceSource: Bytes!
   isFallbackRequired: Boolean!
   type: PriceOracleAssetType!
@@ -127,7 +127,7 @@ type PriceOracle @entity {
   usdDependentAssets: [PriceOracleAsset!]!
   fallbackPriceOracle: Bytes!
   tokens: [PriceOracleAsset!]! @derivedFrom(field: "oracle")
-  usdPriceNativeHistory: [UsdEthPriceHistoryItem!]! @derivedFrom(field: "oracle")
+  usdPriceNativeHistory: [UsdNativePriceHistoryItem!]! @derivedFrom(field: "oracle")
   tokensWithFallback: [PriceOracleAsset!]!
   lastUpdateTimestamp: Int!
   version: Int!
@@ -396,7 +396,7 @@ type ReserveParamsHistoryItem @entity {
   totalATokenSupply: BigInt!
   totalLiquidityAsCollateral: BigInt!
   availableLiquidity: BigInt!
-  priceInEth: BigInt!
+  priceInNative: BigInt!
   priceInUsd: BigDecimal!
   timestamp: Int!
   totalScaledVariableDebt: BigInt!

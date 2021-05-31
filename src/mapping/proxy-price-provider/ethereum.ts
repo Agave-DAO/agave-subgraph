@@ -27,7 +27,7 @@ import {
   zeroBI,
 } from '../../utils/converters';
 import { MOCK_USD_ADDRESS } from '../../utils/constants';
-import { genericPriceUpdate, usdEthPriceUpdate } from '../../helpers/price-updates';
+import { genericPriceUpdate, usdNativePriceUpdate } from '../../helpers/price-updates';
 import { PriceOracle, PriceOracleAsset } from '../../../generated/schema';
 import { EACAggregatorProxy } from '../../../generated/AgaveOracle/EACAggregatorProxy';
 export { handleFallbackOracleUpdated, handleWethSet } from './proxy-price-provider';
@@ -180,7 +180,7 @@ export function priceFeedUpdated(
   if (sAssetAddress == MOCK_USD_ADDRESS) {
     priceOracle.usdPriceNativeFallbackRequired = priceOracleAsset.isFallbackRequired;
     priceOracle.usdPriceNativeMainSource = priceOracleAsset.priceSource;
-    usdEthPriceUpdate(priceOracle, formatUsdEthChainlinkPrice(priceFromOracle), event);
+    usdNativePriceUpdate(priceOracle, formatUsdEthChainlinkPrice(priceFromOracle), event);
     // this is so we also save the assetOracle for usd chainlink
     genericPriceUpdate(priceOracleAsset, priceFromOracle, event);
   } else {
@@ -361,7 +361,7 @@ function chainLinkAggregatorUpdated(
   if (sAssetAddress == MOCK_USD_ADDRESS) {
     priceOracle.usdPriceNativeFallbackRequired = priceOracleAsset.isFallbackRequired;
     priceOracle.usdPriceNativeMainSource = assetOracleAddress;
-    usdEthPriceUpdate(priceOracle, formatUsdEthChainlinkPrice(priceFromProxy), event);
+    usdNativePriceUpdate(priceOracle, formatUsdEthChainlinkPrice(priceFromProxy), event);
   } else {
     // TODO: remove old one ChainLink aggregator template entity if it exists, and it's not fallback oracle
     // if chainlink was invalid before and valid now, remove from tokensWithFallback array

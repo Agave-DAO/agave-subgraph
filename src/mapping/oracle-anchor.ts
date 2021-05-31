@@ -13,7 +13,7 @@ import {
   getOrInitPriceOracle,
   getPriceOracleAsset,
 } from '../helpers/initializers';
-import { genericPriceUpdate, usdEthPriceUpdate } from '../helpers/price-updates';
+import { genericPriceUpdate, usdNativePriceUpdate } from '../helpers/price-updates';
 import { MOCK_USD_ADDRESS } from '../utils/constants';
 import {
   convertToLowerCase,
@@ -99,7 +99,7 @@ export function priceFeedUpdated(
     if (sAssetAddress == MOCK_USD_ADDRESS) {
       priceOracle.usdPriceNativeFallbackRequired = priceOracleAsset.isFallbackRequired;
       priceOracle.usdPriceNativeMainSource = priceOracleAsset.priceSource;
-      usdEthPriceUpdate(priceOracle, formatUsdEthChainlinkPrice(priceFromOracle), event);
+      usdNativePriceUpdate(priceOracle, formatUsdEthChainlinkPrice(priceFromOracle), event);
       // this is so we also save the assetOracle for usd chainlink
       genericPriceUpdate(priceOracleAsset, priceFromOracle, event);
     } else {

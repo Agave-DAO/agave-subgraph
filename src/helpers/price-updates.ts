@@ -4,7 +4,7 @@ import {
   PriceHistoryItem,
   PriceOracle,
   PriceOracleAsset,
-  UsdEthPriceHistoryItem,
+  UsdNativePriceHistoryItem,
 } from '../../generated/schema';
 import { getOrInitPriceOracle, getPriceOracleAsset } from './initializers';
 import { AgaveOracle } from '../../generated/templates/ChainlinkAggregator/AgaveOracle';
@@ -13,7 +13,7 @@ export function savePriceToHistory(oracleAsset: PriceOracleAsset, event: ethereu
   let id = oracleAsset.id + event.block.number.toString() + event.transaction.index.toString();
   let priceHistoryItem = new PriceHistoryItem(id);
   priceHistoryItem.asset = oracleAsset.id;
-  priceHistoryItem.price = oracleAsset.priceInEth;
+  priceHistoryItem.price = oracleAsset.priceInNative;
   priceHistoryItem.timestamp = oracleAsset.lastUpdateTimestamp;
   priceHistoryItem.save();
 }
@@ -27,7 +27,7 @@ export function updateAssetPriceFromAgaveOracle(event: ethereum.Event): void {
 
   let assetPriceCall = proxyPriceProvider.try_getAssetPrice(assetAddress);
   if (!assetPriceCall.reverted) {
-    priceOracleAsset.priceInEth = assetPriceCall.value;
+    priceOracleAsset.priceInNative = assetPriceCall.value;
     priceOracleAsset.save();
 
     // save price to history
@@ -51,7 +51,7 @@ export function updateDependentAssets(dependentAssets: string[], event: ethereum
       Address.fromString(dependentOracleAsset.id)
     );
     if (!assetPrice.reverted) {
-      dependentOracleAsset.priceInEth = assetPrice.value;
+      dependentOracleAsset.priceInNative = assetPrice.value;
     } else {
       log.error(
         'DependentAsset: {} | OracleAssetId: {} | proxyPriceProvider: {} | EventAddress: {}',
@@ -68,7 +68,7 @@ export function updateDependentAssets(dependentAssets: string[], event: ethereum
   }
 }
 
-export function usdEthPriceUpdate(
+export function usdNativePriceUpdate(
   priceOracle: PriceOracle,
   price: BigInt,
   event: ethereum.Event
@@ -77,13 +77,13 @@ export function usdEthPriceUpdate(
   priceOracle.lastUpdateTimestamp = event.block.timestamp.toI32();
   priceOracle.save();
 
-  let usdEthPriceHistoryItem = new UsdEthPriceHistoryItem(
+  let usdNativePriceHistoryItem = new UsdNativePriceHistoryItem(
     event.block.number.toString() + event.transaction.index.toString()
   );
-  usdEthPriceHistoryItem.oracle = priceOracle.id;
-  usdEthPriceHistoryItem.price = priceOracle.usdPriceNative;
-  usdEthPriceHistoryItem.timestamp = priceOracle.lastUpdateTimestamp;
-  usdEthPriceHistoryItem.save();
+  usdNativePriceHistoryItem.oracle = priceOracle.id;
+  usdNativePriceHistoryItem.price = priceOracle.usdPriceNative;
+  usdNativePriceHistoryItem.timestamp = priceOracle.lastUpdateTimestamp;
+  usdNativePriceHistoryItem.save();
 
   updateDependentAssets(priceOracle.usdDependentAssets, event);
 }
@@ -93,7 +93,7 @@ export function genericPriceUpdate(
   price: BigInt,
   event: ethereum.Event
 ): void {
-  oracleAsset.priceInEth = price;
+  oracleAsset.priceInNative = price;
   oracleAsset.lastUpdateTimestamp = event.block.timestamp.toI32();
   oracleAsset.save();
   // add new price to history

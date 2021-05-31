@@ -15,7 +15,7 @@ import {
 import { PriceOracle } from '../../generated/schema';
 import { AgaveOracle } from '../../generated/AgaveOracle/AgaveOracle';
 import { MOCK_USD_ADDRESS } from '../utils/constants';
-import { genericPriceUpdate, usdEthPriceUpdate } from '../helpers/price-updates';
+import { genericPriceUpdate, usdNativePriceUpdate } from '../helpers/price-updates';
 
 // GANACHE
 export function handleAssetPriceUpdated(event: AssetPriceUpdated): void {
@@ -25,7 +25,7 @@ export function handleAssetPriceUpdated(event: AssetPriceUpdated): void {
 
 export function handleEthPriceUpdated(event: EthPriceUpdated): void {
   let priceOracle = getOrInitPriceOracle();
-  usdEthPriceUpdate(priceOracle, event.params._price, event);
+  usdNativePriceUpdate(priceOracle, event.params._price, event);
 }
 
 // KOVAN
@@ -36,7 +36,7 @@ export function handleProphecySubmitted(event: ProphecySubmitted): void {
     // if usd mock address
     if (event.params._asset.toHexString() == MOCK_USD_ADDRESS) {
       if (priceOracle.usdPriceNativeMainSource.equals(zeroAddress())) {
-        usdEthPriceUpdate(
+        usdNativePriceUpdate(
           priceOracle,
           formatUsdEthChainlinkPrice(event.params._oracleProphecy),
           event
@@ -51,7 +51,7 @@ export function handleProphecySubmitted(event: ProphecySubmitted): void {
   }
 }
 
-function genericHandleChainlinkUSDETHPrice(
+function genericHandleChainlinkUSDNATIVEPrice(
   price: BigInt,
   event: ethereum.Event,
   priceOracle: PriceOracle,
@@ -59,10 +59,10 @@ function genericHandleChainlinkUSDETHPrice(
 ): void {
   if (price.gt(zeroBI())) {
     priceOracle.usdPriceNativeFallbackRequired = false;
-    usdEthPriceUpdate(priceOracle, formatUsdEthChainlinkPrice(price), event);
+    usdNativePriceUpdate(priceOracle, formatUsdEthChainlinkPrice(price), event);
   } else {
     priceOracle.usdPriceNativeFallbackRequired = true;
-    usdEthPriceUpdate(
+    usdNativePriceUpdate(
       priceOracle,
       formatUsdEthChainlinkPrice(
         proxyPriceProvider.getAssetPrice(Bytes.fromHexString(MOCK_USD_ADDRESS) as Address)
@@ -79,7 +79,7 @@ export function handleChainlinkAnswerUpdated(event: AnswerUpdated): void {
 
   if (priceOracle.usdPriceNativeMainSource.equals(event.address)) {
     let proxyPriceProvider = AgaveOracle.bind(priceOracle.proxyPriceProvider as Address);
-    genericHandleChainlinkUSDETHPrice(event.params.current, event, priceOracle, proxyPriceProvider);
+    genericHandleChainlinkUSDNATIVEPrice(event.params.current, event, priceOracle, proxyPriceProvider);
   } else {
     let oracleAsset = getPriceOracleAsset(chainlinkAggregator.oracleAsset);
 

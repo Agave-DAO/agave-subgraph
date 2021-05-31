@@ -16,7 +16,7 @@ import {
   zeroBI,
 } from '../../utils/converters';
 import { MOCK_USD_ADDRESS, ZERO_ADDRESS } from '../../utils/constants';
-import { genericPriceUpdate, usdEthPriceUpdate } from '../../helpers/price-updates';
+import { genericPriceUpdate, usdNativePriceUpdate } from '../../helpers/price-updates';
 import { WETHReserve } from '../../../generated/schema';
 
 export function handleWrappedNativeSet(event: WrappedNativeSet): void {
@@ -34,7 +34,7 @@ export function handleWrappedNativeSet(event: WrappedNativeSet): void {
   weth.save();
 
   let oracleAsset = getPriceOracleAsset(wethAddress.toHexString());
-  oracleAsset.priceInEth = exponentToBigInt(18);
+  oracleAsset.priceInNative = exponentToBigInt(18);
   oracleAsset.lastUpdateTimestamp = event.block.timestamp.toI32();
   oracleAsset.save();
 }
@@ -91,7 +91,7 @@ export function handleFallbackOracleUpdated(event: FallbackOracleUpdated): void 
       priceOracle.usdPriceNativeFallbackRequired ||
       priceOracle.usdPriceNativeMainSource.equals(zeroAddress())
     ) {
-      usdEthPriceUpdate(priceOracle, ethUsdPrice, event);
+      usdNativePriceUpdate(priceOracle, ethUsdPrice, event);
     }
   }
 }

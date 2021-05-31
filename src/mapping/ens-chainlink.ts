@@ -10,7 +10,7 @@ import { ChainlinkAggregator as ChainlinkAggregatorContract } from '../../genera
 import { ChainlinkENS } from '../../generated/schema';
 import { IExtendedPriceAggregator } from '../../generated/ChainlinkENSResolver/IExtendedPriceAggregator';
 import { formatUsdEthChainlinkPrice, zeroBI } from '../utils/converters';
-import { genericPriceUpdate, usdEthPriceUpdate } from '../helpers/price-updates';
+import { genericPriceUpdate, usdNativePriceUpdate } from '../helpers/price-updates';
 import { MOCK_USD_ADDRESS } from '../utils/constants';
 
 // Event that gets triggered when an aggregator of chainlink change gets triggered
@@ -42,7 +42,7 @@ export function handleAddressesChanged(event: AddrChanged): void {
         let priceOracle = getOrInitPriceOracle();
         priceOracle.usdPriceNativeFallbackRequired = assetOracle.isFallbackRequired;
         priceOracle.usdPriceNativeMainSource = priceSource;
-        usdEthPriceUpdate(priceOracle, formatUsdEthChainlinkPrice(latestAnswerCall.value), event);
+        usdNativePriceUpdate(priceOracle, formatUsdEthChainlinkPrice(latestAnswerCall.value), event);
       }
     } else {
       log.error(`Latest answer call failed on aggregator:: {} | for node:: {}`, [

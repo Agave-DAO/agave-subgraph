@@ -147,7 +147,7 @@ export function getPriceOracleAsset(id: string, save: boolean = true): PriceOrac
     priceOracleReserve.dependentAssets = [];
     priceOracleReserve.type = PRICE_ORACLE_ASSET_TYPE_SIMPLE;
     priceOracleReserve.platform = PRICE_ORACLE_ASSET_PLATFORM_SIMPLE;
-    priceOracleReserve.priceInEth = zeroBI();
+    priceOracleReserve.priceInNative = zeroBI();
     priceOracleReserve.isFallbackRequired = false;
     priceOracleReserve.lastUpdateTimestamp = 0;
     priceOracleReserve.fromChainlinkSourcesRegistry = false;
@@ -322,7 +322,7 @@ export function getOrInitReserveParamsHistoryItem(
     reserveParamsHistoryItem.totalATokenSupply = zeroBI();
     reserveParamsHistoryItem.availableLiquidity = zeroBI();
     reserveParamsHistoryItem.totalLiquidityAsCollateral = zeroBI();
-    reserveParamsHistoryItem.priceInEth = zeroBI();
+    reserveParamsHistoryItem.priceInNative = zeroBI();
     reserveParamsHistoryItem.priceInUsd = zeroBD();
     reserveParamsHistoryItem.reserve = reserve.id;
     reserveParamsHistoryItem.totalScaledVariableDebt = zeroBI();

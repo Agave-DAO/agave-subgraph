@@ -123,10 +123,10 @@ function saveReserve(reserve: Reserve, event: ethereum.Event): void {
   reserveParamsHistoryItem.totalATokenSupply = reserve.totalATokenSupply;
   reserveParamsHistoryItem.averageStableBorrowRate = reserve.averageStableRate;
   let priceOracleAsset = getPriceOracleAsset(reserve.price);
-  reserveParamsHistoryItem.priceInEth = priceOracleAsset.priceInEth;
+  reserveParamsHistoryItem.priceInNative = priceOracleAsset.priceInNative;
 
   let priceOracle = getOrInitPriceOracle();
-  reserveParamsHistoryItem.priceInUsd = reserveParamsHistoryItem.priceInEth
+  reserveParamsHistoryItem.priceInUsd = reserveParamsHistoryItem.priceInNative
     .toBigDecimal()
     .div(priceOracle.usdPriceNative.toBigDecimal());
 
