@@ -88,8 +88,8 @@ export function handleFallbackOracleUpdated(event: FallbackOracleUpdated): void 
       ethUsdPrice = ethUsdPriceCall.value;
     }
     if (
-      priceOracle.usdPriceEthFallbackRequired ||
-      priceOracle.usdPriceEthMainSource.equals(zeroAddress())
+      priceOracle.usdPriceNativeFallbackRequired ||
+      priceOracle.usdPriceNativeMainSource.equals(zeroAddress())
     ) {
       usdEthPriceUpdate(priceOracle, ethUsdPrice, event);
     }

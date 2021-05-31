@@ -178,8 +178,8 @@ export function priceFeedUpdated(
   }
 
   if (sAssetAddress == MOCK_USD_ADDRESS) {
-    priceOracle.usdPriceEthFallbackRequired = priceOracleAsset.isFallbackRequired;
-    priceOracle.usdPriceEthMainSource = priceOracleAsset.priceSource;
+    priceOracle.usdPriceNativeFallbackRequired = priceOracleAsset.isFallbackRequired;
+    priceOracle.usdPriceNativeMainSource = priceOracleAsset.priceSource;
     usdEthPriceUpdate(priceOracle, formatUsdEthChainlinkPrice(priceFromOracle), event);
     // this is so we also save the assetOracle for usd chainlink
     genericPriceUpdate(priceOracleAsset, priceFromOracle, event);
@@ -359,8 +359,8 @@ function chainLinkAggregatorUpdated(
   priceOracleAsset.priceSource = assetOracleAddress;
 
   if (sAssetAddress == MOCK_USD_ADDRESS) {
-    priceOracle.usdPriceEthFallbackRequired = priceOracleAsset.isFallbackRequired;
-    priceOracle.usdPriceEthMainSource = assetOracleAddress;
+    priceOracle.usdPriceNativeFallbackRequired = priceOracleAsset.isFallbackRequired;
+    priceOracle.usdPriceNativeMainSource = assetOracleAddress;
     usdEthPriceUpdate(priceOracle, formatUsdEthChainlinkPrice(priceFromProxy), event);
   } else {
     // TODO: remove old one ChainLink aggregator template entity if it exists, and it's not fallback oracle

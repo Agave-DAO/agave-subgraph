@@ -120,24 +120,14 @@ export function getOrInitUserReserveWithIds(
   return initUserReserve(underlyingAssetAddress, userAddress, pool, reserveId);
 }
 
-export function getOrInitUserReserve(
-  _user: Address,
-  _underlyingAsset: Address,
-  event: ethereum.Event
-): UserReserve {
-  let poolId = getPoolByContract(event);
-  let reserve = getOrInitReserve(_underlyingAsset, event);
-  return initUserReserve(_underlyingAsset, _user, poolId, reserve.id);
-}
-
 export function getOrInitPriceOracle(): PriceOracle {
   let priceOracle = PriceOracle.load('1');
   if (!priceOracle) {
     priceOracle = new PriceOracle('1');
     priceOracle.proxyPriceProvider = zeroAddress();
-    priceOracle.usdPriceEth = zeroBI();
-    priceOracle.usdPriceEthMainSource = zeroAddress();
-    priceOracle.usdPriceEthFallbackRequired = false;
+    priceOracle.usdPriceNative = zeroBI();
+    priceOracle.usdPriceNativeMainSource = zeroAddress();
+    priceOracle.usdPriceNativeFallbackRequired = false;
     priceOracle.fallbackPriceOracle = zeroAddress();
     priceOracle.tokensWithFallback = [];
     priceOracle.lastUpdateTimestamp = 0;
@@ -254,6 +244,16 @@ export function getOrInitReserve(underlyingAsset: Address, event: ethereum.Event
   }
   return reserve as Reserve;
 }
+
+export function getOrInitUserReserve(
+	_user: Address,
+	_underlyingAsset: Address,
+	event: ethereum.Event
+  ): UserReserve {
+	let poolId = getPoolByContract(event);
+	let reserve = getOrInitReserve(_underlyingAsset, event);
+	return initUserReserve(_underlyingAsset, _user, poolId, reserve.id);
+  }
 
 export function getChainlinkAggregator(id: string): ChainlinkAggregator {
   let chainlinkAggregator = ChainlinkAggregator.load(id);

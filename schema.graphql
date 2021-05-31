@@ -121,13 +121,13 @@ type PriceOracleAsset @entity {
 type PriceOracle @entity {
   id: ID!
   proxyPriceProvider: Bytes!
-  usdPriceEth: BigInt!
-  usdPriceEthMainSource: Bytes!
-  usdPriceEthFallbackRequired: Boolean!
+  usdPriceNative: BigInt!
+  usdPriceNativeMainSource: Bytes!
+  usdPriceNativeFallbackRequired: Boolean!
   usdDependentAssets: [PriceOracleAsset!]!
   fallbackPriceOracle: Bytes!
   tokens: [PriceOracleAsset!]! @derivedFrom(field: "oracle")
-  usdPriceEthHistory: [UsdEthPriceHistoryItem!]! @derivedFrom(field: "oracle")
+  usdPriceNativeHistory: [UsdEthPriceHistoryItem!]! @derivedFrom(field: "oracle")
   tokensWithFallback: [PriceOracleAsset!]!
   lastUpdateTimestamp: Int!
   version: Int!

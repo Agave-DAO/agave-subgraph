@@ -73,7 +73,7 @@ export function usdEthPriceUpdate(
   price: BigInt,
   event: ethereum.Event
 ): void {
-  priceOracle.usdPriceEth = price;
+  priceOracle.usdPriceNative = price;
   priceOracle.lastUpdateTimestamp = event.block.timestamp.toI32();
   priceOracle.save();
 
@@ -81,7 +81,7 @@ export function usdEthPriceUpdate(
     event.block.number.toString() + event.transaction.index.toString()
   );
   usdEthPriceHistoryItem.oracle = priceOracle.id;
-  usdEthPriceHistoryItem.price = priceOracle.usdPriceEth;
+  usdEthPriceHistoryItem.price = priceOracle.usdPriceNative;
   usdEthPriceHistoryItem.timestamp = priceOracle.lastUpdateTimestamp;
   usdEthPriceHistoryItem.save();
 

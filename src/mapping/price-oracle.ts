@@ -35,7 +35,7 @@ export function handleProphecySubmitted(event: ProphecySubmitted): void {
   if (priceOracle.fallbackPriceOracle.equals(event.address)) {
     // if usd mock address
     if (event.params._asset.toHexString() == MOCK_USD_ADDRESS) {
-      if (priceOracle.usdPriceEthMainSource.equals(zeroAddress())) {
+      if (priceOracle.usdPriceNativeMainSource.equals(zeroAddress())) {
         usdEthPriceUpdate(
           priceOracle,
           formatUsdEthChainlinkPrice(event.params._oracleProphecy),
@@ -58,10 +58,10 @@ function genericHandleChainlinkUSDETHPrice(
   proxyPriceProvider: AgaveOracle
 ): void {
   if (price.gt(zeroBI())) {
-    priceOracle.usdPriceEthFallbackRequired = false;
+    priceOracle.usdPriceNativeFallbackRequired = false;
     usdEthPriceUpdate(priceOracle, formatUsdEthChainlinkPrice(price), event);
   } else {
-    priceOracle.usdPriceEthFallbackRequired = true;
+    priceOracle.usdPriceNativeFallbackRequired = true;
     usdEthPriceUpdate(
       priceOracle,
       formatUsdEthChainlinkPrice(
@@ -77,7 +77,7 @@ export function handleChainlinkAnswerUpdated(event: AnswerUpdated): void {
   let priceOracle = getOrInitPriceOracle();
   let chainlinkAggregator = getChainlinkAggregator(event.address.toHexString());
 
-  if (priceOracle.usdPriceEthMainSource.equals(event.address)) {
+  if (priceOracle.usdPriceNativeMainSource.equals(event.address)) {
     let proxyPriceProvider = AgaveOracle.bind(priceOracle.proxyPriceProvider as Address);
     genericHandleChainlinkUSDETHPrice(event.params.current, event, priceOracle, proxyPriceProvider);
   } else {

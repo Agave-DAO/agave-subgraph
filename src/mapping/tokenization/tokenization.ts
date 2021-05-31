@@ -128,7 +128,7 @@ function saveReserve(reserve: Reserve, event: ethereum.Event): void {
   let priceOracle = getOrInitPriceOracle();
   reserveParamsHistoryItem.priceInUsd = reserveParamsHistoryItem.priceInEth
     .toBigDecimal()
-    .div(priceOracle.usdPriceEth.toBigDecimal());
+    .div(priceOracle.usdPriceNative.toBigDecimal());
 
   reserveParamsHistoryItem.timestamp = event.block.timestamp.toI32();
   reserveParamsHistoryItem.save();
@@ -173,7 +173,7 @@ function tokenMint(event: ethereum.Event, from: Address, value: BigInt, index: B
   let poolReserve = getOrInitReserve(aToken.underlyingAssetAddress as Address, event);
   poolReserve.totalATokenSupply = poolReserve.totalATokenSupply.plus(value);
   // Check if we are minting to treasury
-  if (from.toHexString() != '0x464c71f6c2f760dda6093dcb91c24c39e5d6e18c') {
+  if (from.toHexString() != '0x2d206fd0c7c76016234810232159b05562608a42') {
     let userReserve = getOrInitUserReserve(from, aToken.underlyingAssetAddress as Address, event);
     let calculatedAmount = rayDiv(value, index);
 

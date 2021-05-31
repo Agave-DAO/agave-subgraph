@@ -125,8 +125,8 @@ export function priceFeedUpdated(
   }
   // if (assetAddress.toHexString != MOCK_USD_ADDRESS)
   if (sAssetAddress == MOCK_USD_ADDRESS) {
-    priceOracle.usdPriceEthFallbackRequired = priceOracleAsset.isFallbackRequired;
-    priceOracle.usdPriceEthMainSource = priceOracleAsset.priceSource;
+    priceOracle.usdPriceNativeFallbackRequired = priceOracleAsset.isFallbackRequired;
+    priceOracle.usdPriceNativeMainSource = priceOracleAsset.priceSource;
     usdEthPriceUpdate(priceOracle, formatUsdEthChainlinkPrice(priceFromOracle), event);
     // this is so we also save the assetOracle for usd chainlink
     genericPriceUpdate(priceOracleAsset, priceFromOracle, event);

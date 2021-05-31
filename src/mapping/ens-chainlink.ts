@@ -40,8 +40,8 @@ export function handleAddressesChanged(event: AddrChanged): void {
       // update usd
       if (oracleAssetAddress.toHexString() == MOCK_USD_ADDRESS) {
         let priceOracle = getOrInitPriceOracle();
-        priceOracle.usdPriceEthFallbackRequired = assetOracle.isFallbackRequired;
-        priceOracle.usdPriceEthMainSource = priceSource;
+        priceOracle.usdPriceNativeFallbackRequired = assetOracle.isFallbackRequired;
+        priceOracle.usdPriceNativeMainSource = priceSource;
         usdEthPriceUpdate(priceOracle, formatUsdEthChainlinkPrice(latestAnswerCall.value), event);
       }
     } else {
