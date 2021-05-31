@@ -1,0 +1,8 @@
+{
+	"network": "rinkeby",
+	"AgaveOracleAddress": "0xb42a48F27150469d8a55dA3ad258B73a37239451",
+	"AgaveOracleStartBlock": 8501084,
+	"LendingPoolAddressesProviderRegistryAddress": "0xDa731590C871b7025b86AE3f4D4aB6A1f5f73508",
+	"LendingPoolAddressesProviderRegistryStartBlock": 8501084
+  }
+  

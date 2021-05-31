@@ -1,6 +1,6 @@
 specVersion: 0.0.2
 description: Protocol v2 subgraph
-repository: https://github.com/aave/protocol-v2-subgraph
+repository: https://github.com/Agave-DAO/agave-subgraph.git
 schema:
   file: ./schema.graphql
 dataSources:
@@ -8,12 +8,12 @@ dataSources:
   #      ORACLES / PRICE PROVIDERS
   # --------------------------------------
   - kind: ethereum/contract
-    name: AaveOracle
+    name: AgaveOracle
     network: {{network}}
     source:
-      address: '{{AaveOracleAddress}}'
-      startBlock: {{AaveOracleStartBlock}}
-      abi: AaveOracle
+      address: '{{AgaveOracleAddress}}'
+      startBlock: {{AgaveOracleStartBlock}}
+      abi: AgaveOracle
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -23,8 +23,8 @@ dataSources:
         - PriceOracle
         - PriceOracleAsset
       abis:
-        - name: AaveOracle
-          file: ./externals/protocol-v2/artifacts/contracts/misc/AaveOracle.sol/AaveOracle.json
+        - name: AgaveOracle
+          file: ./externals/protocol-v2/artifacts/contracts/misc/AgaveOracle.sol/AgaveOracle.json
         - name: GenericOracleI
           file: ./externals/protocol-v2/artifacts/contracts/mocks/oracle/GenericOracleI.sol/GenericOracleI.json
         - name: IExtendedPriceAggregator
@@ -36,9 +36,9 @@ dataSources:
           handler: handleAssetSourceUpdated
         - event: FallbackOracleUpdated(indexed address)
           handler: handleFallbackOracleUpdated
-        - event: WethSet(indexed address)
-          handler: handleWethSet
-      file: src/mapping/proxy-price-provider/matic.ts
+        - event: WrappedNativeSet(indexed address)
+          handler: handleWrappedNativeSet
+      file: src/mapping/proxy-price-provider/rinkeby.ts
   # --------------------------------------
   #           CONFIGURATIONS
   # --------------------------------------
@@ -64,35 +64,7 @@ dataSources:
         - event: AddressesProviderUnregistered(indexed address)
           handler: handleAddressesProviderUnregistered
       file: src/mapping/address-provider-registry.ts
-  # --------------------------------------
-  #             CHAINLINK
-  # --------------------------------------
-  - kind: ethereum/contract
-    name: ChainlinkSourcesRegistry
-    network: {{network}}
-    source:
-      address: '{{ChainlinkSourcesRegistryAddress}}'
-      startBlock: {{ChainlinkSourcesRegistryStartBlock}}
-      abi: ChainlinkSourcesRegistry
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.4
-      language: wasm/assemblyscript
-      entities:
-        - PriceOracle
-      abis:
-        - name: ChainlinkSourcesRegistry
-          file: ./constant-abis/ChainlinkSourcesRegistry.json
-        - name: AaveOracle
-          file: ./externals/protocol-v2/artifacts/contracts/misc/AaveOracle.sol/AaveOracle.json
-        - name: GenericOracleI
-          file: ./externals/protocol-v2/artifacts/contracts/mocks/oracle/GenericOracleI.sol/GenericOracleI.json
-        - name: IExtendedPriceAggregator
-          file: ./externals/protocol-v2/artifacts/contracts/mocks/oracle/IExtendedPriceAggregator.sol/IExtendedPriceAggregator.json
-      eventHandlers:
-        - event: AggregatorUpdated(address,address)
-          handler: handleChainlinkAggregatorUpdated
-      file: src/mapping/proxy-price-provider/matic.ts
+
   # --------------------------------------
   #
   # --------------------------------------
@@ -133,7 +105,7 @@ templates:
           handler: handleUserIndexUpdated
         - event: DistributionEndUpdated(uint256)
           handler: handleDistributionEndUpdated
-      file: src/mapping/incentives-controller/matic.ts
+      file: src/mapping/incentives-controller/rinkeby.ts
   # --------------------------------------
   #      ORACLES / PRICE PROVIDERS
   # --------------------------------------
@@ -175,8 +147,8 @@ templates:
       abis:
         - name: IExtendedPriceAggregator
           file: ./externals/protocol-v2/artifacts/contracts/mocks/oracle/IExtendedPriceAggregator.sol/IExtendedPriceAggregator.json
-        - name: AaveOracle
-          file: ./externals/protocol-v2/artifacts/contracts/misc/AaveOracle.sol/AaveOracle.json
+        - name: AgaveOracle
+          file: ./externals/protocol-v2/artifacts/contracts/misc/AgaveOracle.sol/AgaveOracle.json
       eventHandlers:
         - event: AnswerUpdated(indexed int256,indexed uint256,uint256)
           handler: handleChainlinkAnswerUpdated
@@ -374,7 +346,7 @@ templates:
           handler: handleStableDebtTokenUpgraded
         - event: VariableDebtTokenUpgraded(indexed address,indexed address,indexed address)
           handler: handleVariableDebtTokenUpgraded
-      file: src/mapping/lending-pool-configurator/matic.ts
+      file: src/mapping/lending-pool-configurator/rinkeby.ts
   - kind: ethereum/contract
     name: LendingPool
     network: {{network}}

@@ -2,7 +2,7 @@ const fs = require('fs').promises;
 const path = require('path');
 
 const contractList = [
-  'AaveOracle',
+  'AgaveOracle',
   'ChainlinkUSDETHOracleI',
   'AToken',
   'StableDebtToken',

@@ -13,7 +13,7 @@ import {
   getPriceOracleAsset,
 } from '../helpers/initializers';
 import { PriceOracle } from '../../generated/schema';
-import { AaveOracle } from '../../generated/AaveOracle/AaveOracle';
+import { AgaveOracle } from '../../generated/AgaveOracle/AgaveOracle';
 import { MOCK_USD_ADDRESS } from '../utils/constants';
 import { genericPriceUpdate, usdEthPriceUpdate } from '../helpers/price-updates';
 
@@ -55,7 +55,7 @@ function genericHandleChainlinkUSDETHPrice(
   price: BigInt,
   event: ethereum.Event,
   priceOracle: PriceOracle,
-  proxyPriceProvider: AaveOracle
+  proxyPriceProvider: AgaveOracle
 ): void {
   if (price.gt(zeroBI())) {
     priceOracle.usdPriceEthFallbackRequired = false;
@@ -78,7 +78,7 @@ export function handleChainlinkAnswerUpdated(event: AnswerUpdated): void {
   let chainlinkAggregator = getChainlinkAggregator(event.address.toHexString());
 
   if (priceOracle.usdPriceEthMainSource.equals(event.address)) {
-    let proxyPriceProvider = AaveOracle.bind(priceOracle.proxyPriceProvider as Address);
+    let proxyPriceProvider = AgaveOracle.bind(priceOracle.proxyPriceProvider as Address);
     genericHandleChainlinkUSDETHPrice(event.params.current, event, priceOracle, proxyPriceProvider);
   } else {
     let oracleAsset = getPriceOracleAsset(chainlinkAggregator.oracleAsset);
@@ -103,7 +103,7 @@ export function handleChainlinkAnswerUpdated(event: AnswerUpdated): void {
       } else {
         // oracle answer invalid, start using fallback oracle
         oracleAsset.isFallbackRequired = true;
-        let proxyPriceProvider = AaveOracle.bind(priceOracle.proxyPriceProvider as Address);
+        let proxyPriceProvider = AgaveOracle.bind(priceOracle.proxyPriceProvider as Address);
         let assetPrice = proxyPriceProvider.try_getAssetPrice(
           Bytes.fromHexString(oracleAsset.id) as Address
         );

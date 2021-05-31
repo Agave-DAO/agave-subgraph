@@ -18,8 +18,7 @@ import {
 } from '../../helpers/initializers';
 import { MOCK_USD_ADDRESS } from '../../utils/constants';
 import { genericPriceUpdate, usdEthPriceUpdate } from '../../helpers/price-updates';
-import { AggregatorUpdated } from '../../../generated/ChainlinkSourcesRegistry/ChainlinkSourcesRegistry';
-export { handleFallbackOracleUpdated, handleWethSet } from './proxy-price-provider';
+export { handleFallbackOracleUpdated, handleWrappedNativeSet } from './proxy-price-provider';
 
 export function priceFeedUpdated(
   event: ethereum.Event,
@@ -177,6 +176,7 @@ export function handleAssetSourceUpdated(event: AssetSourceUpdated): void {
   priceFeedUpdated(event, assetAddress, assetOracleAddress, priceOracleAsset, priceOracle);
 }
 
+/*
 export function handleChainlinkAggregatorUpdated(event: AggregatorUpdated): void {
   let assetAddress = event.params.token;
   let assetOracleAddress = event.params.aggregator; // its proxy . Wrong naming
@@ -186,3 +186,4 @@ export function handleChainlinkAggregatorUpdated(event: AggregatorUpdated): void
   priceOracleAsset.fromChainlinkSourcesRegistry = true;
   priceFeedUpdated(event, assetAddress, assetOracleAddress, priceOracleAsset, priceOracle);
 }
+*/

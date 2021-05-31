@@ -2,10 +2,10 @@ import { Bytes, Address, log } from '@graphprotocol/graph-ts';
 
 import {
   FallbackOracleUpdated,
-  AaveOracle,
-  WethSet,
-} from '../../../generated/AaveOracle/AaveOracle';
-import { GenericOracleI as FallbackPriceOracle } from '../../../generated/AaveOracle/GenericOracleI';
+  AgaveOracle,
+  WrappedNativeSet,
+} from '../../../generated/AgaveOracle/AgaveOracle';
+import { GenericOracleI as FallbackPriceOracle } from '../../../generated/AgaveOracle/GenericOracleI';
 
 import { FallbackPriceOracle as FallbackPriceOracleContract } from '../../../generated/templates';
 import { getOrInitPriceOracle, getPriceOracleAsset } from '../../helpers/initializers';
@@ -19,15 +19,15 @@ import { MOCK_USD_ADDRESS, ZERO_ADDRESS } from '../../utils/constants';
 import { genericPriceUpdate, usdEthPriceUpdate } from '../../helpers/price-updates';
 import { WETHReserve } from '../../../generated/schema';
 
-export function handleWethSet(event: WethSet): void {
-  let wethAddress = event.params.weth;
+export function handleWrappedNativeSet(event: WrappedNativeSet): void {
+  let wethAddress = event.params.wrappedNative ;
   let weth = WETHReserve.load('weth');
   if (weth == null) {
     weth = new WETHReserve('weth');
   }
   weth.address = wethAddress;
-  weth.name = 'Wrapped Ether';
-  weth.symbol = 'WETH';
+  weth.name = 'wrappedNative';
+  weth.symbol = 'WNATIVE';
   weth.decimals = 18;
   weth.updatedTimestamp = event.block.timestamp.toI32();
   weth.updatedBlockNumber = event.block.number;
@@ -54,7 +54,7 @@ export function handleFallbackOracleUpdated(event: FallbackOracleUpdated): void 
         priceOracleAsset.priceSource.equals(zeroAddress()) ||
         priceOracleAsset.isFallbackRequired
       ) {
-        let proxyPriceProvider = AaveOracle.bind(event.address);
+        let proxyPriceProvider = AgaveOracle.bind(event.address);
         let price = proxyPriceProvider.try_getAssetPrice(
           Bytes.fromHexString(priceOracleAsset.id) as Address
         );

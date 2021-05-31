@@ -7,7 +7,7 @@ import {
   UsdEthPriceHistoryItem,
 } from '../../generated/schema';
 import { getOrInitPriceOracle, getPriceOracleAsset } from './initializers';
-import { AaveOracle } from '../../generated/templates/ChainlinkAggregator/AaveOracle';
+import { AgaveOracle } from '../../generated/templates/ChainlinkAggregator/AgaveOracle';
 
 export function savePriceToHistory(oracleAsset: PriceOracleAsset, event: ethereum.Event): void {
   let id = oracleAsset.id + event.block.number.toString() + event.transaction.index.toString();
@@ -19,11 +19,11 @@ export function savePriceToHistory(oracleAsset: PriceOracleAsset, event: ethereu
 }
 
 // Method called for external pool updates Uniswap / balancer etc
-export function updateAssetPriceFromAaveOracle(event: ethereum.Event): void {
+export function updateAssetPriceFromAgaveOracle(event: ethereum.Event): void {
   let assetAddress = event.address;
   let priceOracle = getOrInitPriceOracle();
   let priceOracleAsset = getPriceOracleAsset(assetAddress.toHexString());
-  let proxyPriceProvider = AaveOracle.bind(priceOracle.proxyPriceProvider as Address);
+  let proxyPriceProvider = AgaveOracle.bind(priceOracle.proxyPriceProvider as Address);
 
   let assetPriceCall = proxyPriceProvider.try_getAssetPrice(assetAddress);
   if (!assetPriceCall.reverted) {
@@ -41,7 +41,7 @@ export function updateAssetPriceFromAaveOracle(event: ethereum.Event): void {
 
 export function updateDependentAssets(dependentAssets: string[], event: ethereum.Event): void {
   let proxyPriceProviderAddress = getOrInitPriceOracle().proxyPriceProvider;
-  let proxyPriceProvider = AaveOracle.bind(proxyPriceProviderAddress as Address);
+  let proxyPriceProvider = AgaveOracle.bind(proxyPriceProviderAddress as Address);
 
   // update dependent assets price
   for (let i = 0; i < dependentAssets.length; i += 1) {
