@@ -46,7 +46,7 @@ services:
     restart: always
     environment:
       <<: *graph-pg-base
-      postgres_host: 'graph-postgres:5432'
+      postgres_host: 'graph-postgres'
       ipfs: 'graph-ipfs:5001'
       ethereum: 'buidlerevm:http://buidler:8545'
       RUST_LOG: 'info'
