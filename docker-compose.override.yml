@@ -50,6 +50,7 @@ services:
       ipfs: 'graph-ipfs:5001'
       ethereum: 'buidlerevm:http://buidler:8545'
       RUST_LOG: 'info'
+      RUST_BACKTRACE: '1'
 
   graph-ipfs:
     image: ipfs/go-ipfs:v0.4.23
