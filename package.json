@@ -18,7 +18,7 @@
     "subgraph:deploy:self-hosted": "graph deploy $SLUG --ipfs https://ipfs-thegraph.aave.com --node https://adm-thegraph.aave.com",
     "subgraph:deploy:hosted": "graph deploy $SLUG --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/ --access-token $ACCESS_TOKEN",
     "protocol:init": "git submodule update --init --recursive -- externals/protocol-v2 && npm run protocol:install",
-    "protocol:install": "npm run protocol:init && git submodule foreach npm install",
+    "protocol:install": "npm run protocol:init && git submodule foreach npm install --no-save --no-fund --no-audit",
     "protocol:compile-contracts": "git submodule foreach npm run compile",
     "protocol:deploy-contracts": "git submodule foreach npm run aave:docker:dev:migration",
     "protocol:deploy:scenario": "git submodule foreach npm run test-subgraph:scenarios",
