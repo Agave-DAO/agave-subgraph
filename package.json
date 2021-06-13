@@ -17,7 +17,7 @@
     "subgraph:deploy:local": "graph deploy aave/protocol-v2 --ipfs http://localhost:5001 --node http://localhost:8020",
     "subgraph:deploy:self-hosted": "graph deploy $SLUG --ipfs https://ipfs-thegraph.aave.com --node https://adm-thegraph.aave.com",
     "subgraph:deploy:hosted": "graph deploy $SLUG --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/ --access-token $ACCESS_TOKEN",
-    "protocol:init": "git submodule update --init --recursive -- externals/protocol-v2 && yarn run protocol:install",
+    "protocol:init": "git submodule update --init --recursive -- externals/protocol-v2",
     "protocol:install": "yarn run protocol:init && git submodule foreach npm install --no-save --no-fund --no-audit",
     "protocol:compile-contracts": "git submodule foreach yarn run compile",
     "protocol:deploy-contracts": "git submodule foreach yarn run aave:docker:dev:migration",
