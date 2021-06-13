@@ -567,6 +567,19 @@ type WETHReserve @entity {
   updatedBlockNumber: BigInt!
 }
 
+type WXDAIReserve @entity {
+  """
+  wxdai reserve and address
+  """
+  id: ID!
+  address: Bytes!
+  symbol: String!
+  name: String!
+  decimals: Int!
+  updatedTimestamp: Int!
+  updatedBlockNumber: BigInt!
+}
+
 type ATokenBalanceHistoryItem @entity {
   """
   userReserve + txHash
