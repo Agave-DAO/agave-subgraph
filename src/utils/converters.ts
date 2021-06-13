@@ -133,7 +133,7 @@ export function concat(a: ByteArray, b: ByteArray): ByteArray {
   return out as ByteArray;
 }
 
-const Zeros = new ByteArray(32);
+let Zeros = new ByteArray(32);
 Zeros.fill(0);
 
 export function namehash(partition: Array<string>): string {

@@ -1,7 +1,8 @@
 import { PriceOracle, PriceOracleAsset } from '../../../generated/schema';
-import { AaveOracle, AssetSourceUpdated } from '../../../generated/AaveOracle/AaveOracle';
+import { AaveOracle, AssetSourceUpdated, WrappedNativeSet } from '../../../generated/AaveOracle/AaveOracle';
 import { Address, ethereum, log } from '@graphprotocol/graph-ts';
 import {
+  exponentToBigInt,
   formatUsdEthChainlinkPrice,
   getPriceOracleAssetType,
   PRICE_ORACLE_ASSET_TYPE_SIMPLE,
@@ -19,7 +20,29 @@ import {
 import { MOCK_USD_ADDRESS } from '../../utils/constants';
 import { genericPriceUpdate, usdEthPriceUpdate } from '../../helpers/price-updates';
 import { AggregatorUpdated } from '../../../generated/ChainlinkSourcesRegistry/ChainlinkSourcesRegistry';
-export { handleFallbackOracleUpdated, handleWrappedNativeSet } from './proxy-price-provider';
+import { WXDAIReserve } from '../../../generated/schema';
+
+export { handleFallbackOracleUpdated } from './proxy-price-provider';
+
+export function handleWrappedNativeSet(event: WrappedNativeSet): void {
+  let wethAddress = event.params.wrappedNative;
+  let weth = WXDAIReserve.load('wxdai');
+  if (weth == null) {
+    weth = new WXDAIReserve('wxdai');
+  }
+  weth.address = wethAddress;
+  weth.name = 'Wrapped XDAI';
+  weth.symbol = 'WXDAI';
+  weth.decimals = 18;
+  weth.updatedTimestamp = event.block.timestamp.toI32();
+  weth.updatedBlockNumber = event.block.number;
+  weth.save();
+
+  let oracleAsset = getPriceOracleAsset(wethAddress.toHexString());
+  oracleAsset.priceInEth = exponentToBigInt(18);
+  oracleAsset.lastUpdateTimestamp = event.block.timestamp.toI32();
+  oracleAsset.save();
+}
 
 export function priceFeedUpdated(
   event: ethereum.Event,

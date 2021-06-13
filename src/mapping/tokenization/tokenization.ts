@@ -33,10 +33,12 @@ import {
   getOrInitPriceOracle,
   getOrInitReserveParamsHistoryItem,
 } from '../../helpers/initializers';
-import { zeroBI } from '../../utils/converters';
+import { zeroAddress, zeroBI } from '../../utils/converters';
 import { calculateUtilizationRate } from '../../helpers/reserve-logic';
-import { Address, BigInt, ethereum } from '@graphprotocol/graph-ts';
+import { Address, BigInt, ethereum, log } from '@graphprotocol/graph-ts';
 import { rayDiv, rayMul } from '../../helpers/math';
+import { AaveOracle } from '../../../generated/AaveOracle/AaveOracle';
+import { IExtendedPriceAggregator } from '../../../generated/templates/ChainlinkAggregator/IExtendedPriceAggregator';
 
 function saveUserReserveAHistory(
   userReserve: UserReserve,
@@ -123,12 +125,54 @@ function saveReserve(reserve: Reserve, event: ethereum.Event): void {
   reserveParamsHistoryItem.totalATokenSupply = reserve.totalATokenSupply;
   reserveParamsHistoryItem.averageStableBorrowRate = reserve.averageStableRate;
   let priceOracleAsset = getPriceOracleAsset(reserve.price);
+  // If we don't have a proper price or price-source for the asset, ask for the price directly from AaveOracle
+  if (priceOracleAsset.priceSource.equals(zeroAddress()) && priceOracleAsset.priceInEth.isZero()) {
+    let aaveOracleContract = AaveOracle.bind(Address.fromString(reserve.aToken));
+    let res = aaveOracleContract.try_getAssetPrice(reserve.underlyingAsset as Address);
+    if (!res.reverted) {
+      priceOracleAsset.priceInEth = res.value;
+      log.debug('Fetched USD price of asset {} from oracle {}', [
+        reserve.price,
+        aaveOracleContract._address.toHexString(),
+      ]);
+    } else {
+      log.warning('Asset {} unrecognized by oracle {}, RPC reverted', [
+        reserve.price,
+        aaveOracleContract._address.toHexString(),
+      ]);
+    }
+  }
   reserveParamsHistoryItem.priceInEth = priceOracleAsset.priceInEth;
 
   let priceOracle = getOrInitPriceOracle();
+  let usdPriceOfNativeAsset = priceOracle.usdPriceEth;
+  // If we don't have a native USD price, query the AaveOracle for the authoritative but uncached price-at-block
+  if (priceOracle.usdPriceEthMainSource.equals(zeroAddress()) && usdPriceOfNativeAsset.isZero()) {
+    log.debug('Current oracle is {}', [priceOracle.proxyPriceProvider.toHexString()]);
+    let oracleContract = AaveOracle.bind(priceOracle.proxyPriceProvider as Address);
+    let wrappedNativeAddress = oracleContract.wrappedNative();
+    log.debug('Fetching chainlink source for native asset {} from oracle {}', [
+      wrappedNativeAddress.toHexString(),
+      priceOracle.proxyPriceProvider.toHexString(),
+    ]);
+    let chainLinkSource = IExtendedPriceAggregator.bind(
+      oracleContract.getSourceOfAsset(wrappedNativeAddress)
+    );
+    log.debug('Fetched USD price of native asset {} from oracle {} source {}', [
+      wrappedNativeAddress.toHexString(),
+      priceOracle.proxyPriceProvider.toHexString(),
+      chainLinkSource._address.toHexString(),
+    ]);
+    usdPriceOfNativeAsset = chainLinkSource.latestAnswer();
+    log.debug('Native asset {} USD price is {}', [
+      wrappedNativeAddress.toHexString(),
+      usdPriceOfNativeAsset.toString(),
+    ]);
+  }
+
   reserveParamsHistoryItem.priceInUsd = reserveParamsHistoryItem.priceInEth
     .toBigDecimal()
-    .div(priceOracle.usdPriceEth.toBigDecimal());
+    .div(usdPriceOfNativeAsset.toBigDecimal());
 
   reserveParamsHistoryItem.timestamp = event.block.timestamp.toI32();
   reserveParamsHistoryItem.save();
@@ -170,6 +214,7 @@ function tokenBurn(event: ethereum.Event, from: Address, value: BigInt, index: B
 
 function tokenMint(event: ethereum.Event, from: Address, value: BigInt, index: BigInt): void {
   let aToken = getOrInitAToken(event.address);
+  log.info("TokenMint of aToken {}, asset {}", [event.address.toHexString(), aToken.underlyingAssetAddress.toHexString()]);
   let poolReserve = getOrInitReserve(aToken.underlyingAssetAddress as Address, event);
   poolReserve.totalATokenSupply = poolReserve.totalATokenSupply.plus(value);
   // Check if we are minting to treasury
