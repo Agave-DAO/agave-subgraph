@@ -1,0 +1,9 @@
+{
+  "network": "xdai",
+  "AaveOracleAddress": "0x80E08A2042F4135f6cA72BA2fd0e7cAEb2Ee30ef",
+  "AaveOracleStartBlock": 15927430,
+  "LendingPoolAddressesProviderRegistryAddress": "0xa5E80AEAa020Ae41b1cBEe75dE7826297F7D803E",
+  "LendingPoolAddressesProviderRegistryStartBlock": 15927319,
+  "ChainlinkSourcesRegistryAddress": "0x0000000000000000000000000000000000000000",
+  "ChainlinkSourcesRegistryStartBlock": 15927319
+}
