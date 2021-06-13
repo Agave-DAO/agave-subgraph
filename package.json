@@ -39,9 +39,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://gitlab.com/aave-tech/subgraph-v2"
+    "url": "https://github.com/Agave-DAO/agave-subgraph/"
   },
-  "author": "AAVE <tech@aave.com>",
+  "author": "Agave Team",
   "contributors": [
     {
       "name": "Pol Sendra",
