@@ -1,0 +1,9 @@
+{
+  "network": "rinkeby",
+  "AaveOracleAddress": "0xb42a48F27150469d8a55dA3ad258B73a37239451",
+  "AaveOracleStartBlock": 8501083,
+  "LendingPoolAddressesProviderRegistryAddress": "0xDa731590C871b7025b86AE3f4D4aB6A1f5f73508",
+  "LendingPoolAddressesProviderRegistryStartBlock": 8501071,
+  "ChainlinkSourcesRegistryAddress": "0x05ccebD43Dcf66BE1BC83aCe122a04658B4c9811",
+  "ChainlinkSourcesRegistryStartBlock": 8121696
+}
