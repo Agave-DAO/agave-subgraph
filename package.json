@@ -11,7 +11,7 @@
     "prepare:contracts:local": "yarn run protocol:install && yarn run deploy-contracts && yarn run update-address",
     "subgraph:codegen": "graph codegen --output-dir ./generated",
     "subgraph:build": "graph build",
-    "subgraph:create:local": "graph create aave/protocol-v2 --node http://localhost:8020",
+    "subgraph:create:local": "graph create Agave-DAO/v2 --node http://localhost:8020",
     "subgraph:create:self-hosted:kovan": "graph create aave/protocol-v2-kovan --node https://adm-thegraph.aave.com",
     "subgraph:create:self-hosted:mainnet": "graph create aave/protocol-v2 --node https://adm-thegraph.aave.com",
     "subgraph:deploy:local": "graph deploy aave/protocol-v2 --ipfs http://localhost:5001 --node http://localhost:8020",
@@ -30,9 +30,12 @@
     "deploy:hosted:mainnet": "BLOCKCHAIN=ethereum NETWORK=mainnet env-cmd yarn run prepare:subgraph && SLUG=aave/protocol-v2 env-cmd yarn run subgraph:deploy:hosted",
     "deploy:hosted:matic": "BLOCKCHAIN=matic NETWORK=matic env-cmd yarn run prepare:subgraph && SLUG=aave/aave-v2-matic env-cmd yarn run subgraph:deploy:hosted",
     "deploy:hosted:mumbai": "BLOCKCHAIN=matic NETWORK=mumbai env-cmd yarn run prepare:subgraph && SLUG=aave/aave-v2-polygon-mumbai env-cmd yarn run subgraph:deploy:hosted",
+    "deploy:hosted:xdai": "BLOCKCHAIN=xdai NETWORK=xdai env-cmd yarn run prepare:subgraph && SLUG=Agave-DAO/v2-xdai env-cmd yarn run subgraph:deploy:hosted",
     "deploy:self-hosted:kovan": "BLOCKCHAIN=ethereum NETWORK=kovan yarn run prepare:subgraph && SLUG=aave/protocol-v2-kovan yarn run subgraph:deploy:self-hosted",
     "deploy:self-hosted:mainnet": "BLOCKCHAIN=ethereum NETWORK=mainnet yarn run prepare:subgraph && SLUG=aave/protocol-v2 yarn run subgraph:deploy:self-hosted",
-    "deploy:self-hosted:matic": "BLOCKCHAIN=matic NETWORK=matic env-cmd yarn run prepare:subgraph && SLUG=aave/aave-v2-matic env-cmd yarn run subgraph:deploy:local"
+    "deploy:local:matic": "BLOCKCHAIN=matic NETWORK=matic env-cmd yarn run prepare:subgraph && SLUG=aave/aave-v2-matic env-cmd yarn run subgraph:deploy:local",
+    "deploy:local:xdai": "BLOCKCHAIN=xdai NETWORK=xdai env-cmd yarn run prepare:subgraph && SLUG=Agave-DAO/v2-xdai env-cmd yarn run subgraph:deploy:local",
+    "deploy:local:rinkeby": "BLOCKCHAIN=xdai NETWORK=rinkeby env-cmd yarn run prepare:subgraph && SLUG=Agave-DAO/v2-rinkeby env-cmd yarn run subgraph:deploy:local"
   },
   "repository": {
     "type": "git",
