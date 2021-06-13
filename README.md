@@ -77,7 +77,8 @@ TODO:
 1. Start docker environment for a buidler node and TheGraph infrastructure:
 
 ```
-docker-compose up
+# deletes prior images to clear the cached postgres output; see note below
+docker-compose down -v && docker-compose up -V
 ```
 
 Remember that before runing `docker-compose up` you need to run `docker-compose down` if it is not the first time. That is because the postgres database needs to not be persistant, so we need to delete the docker volumes.
@@ -85,10 +86,15 @@ Remember that before runing `docker-compose up` you need to run `docker-compose 
 2. Deploy local subgraph:
 
 ```
-
+# run this from within the subgraph repo root
+graph create --node http://localhost:8020 agave/protocol-v2 \
+  && graph deploy --node http://localhost:8020 --ipfs http://127.0.0.1:5001 agave/protocol-v2 ./subgraph.yaml
 ```
 
 3. To check or query the subgraph use:
+
+You can run `docker-compose logs -f graph-node` in another terminal to see the graph-node outputs,
+since the main compose terminal outputs get cluttered by hardhat debug outputs.
 
 ```
 Queries (HTTP):     http://localhost:8000/subgraphs/name/aave/migrator
