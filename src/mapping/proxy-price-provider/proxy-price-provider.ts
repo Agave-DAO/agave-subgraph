@@ -3,7 +3,7 @@ import { Bytes, Address, log } from '@graphprotocol/graph-ts';
 import {
   FallbackOracleUpdated,
   AaveOracle,
-  WethSet,
+  WrappedNativeSet,
 } from '../../../generated/AaveOracle/AaveOracle';
 import { GenericOracleI as FallbackPriceOracle } from '../../../generated/AaveOracle/GenericOracleI';
 
@@ -19,8 +19,8 @@ import { MOCK_USD_ADDRESS, ZERO_ADDRESS } from '../../utils/constants';
 import { genericPriceUpdate, usdEthPriceUpdate } from '../../helpers/price-updates';
 import { WETHReserve } from '../../../generated/schema';
 
-export function handleWethSet(event: WethSet): void {
-  let wethAddress = event.params.weth;
+export function handleWrappedNativeSet(event: WrappedNativeSet): void {
+  let wethAddress = event.params.wrappedNative;
   let weth = WETHReserve.load('weth');
   if (weth == null) {
     weth = new WETHReserve('weth');

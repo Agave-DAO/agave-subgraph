@@ -1,10 +1,93 @@
-version: '3.5'
+# yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
+---
+version: '3.9'
+
+volumes:
+  graph_pg_data:
+    driver: local
+  graph_ipfs_data:
+    driver: local
+
+x-graph-pg-base: &graph-pg-base
+  POSTGRES_USER: graph-node
+  POSTGRES_PASSWORD: let-me-in
+  POSTGRES_DB: graph-node
+  postgres_user: graph-node
+  postgres_pass: let-me-in
+  postgres_db: graph-node
+
+x-connection-configs:
+  evm-host-service: &evm-host-service evm
+  evm-host-port: &evm-host-port "${EVM_HOST:-evm}:${EVM_PORT:-8545}"
+  evm-host-string: &evm-host-string "${EVM_PROTOCOL:-http}://${EVM_HOST:-evm}:${EVM_PORT:-8545}"
+  evm-host-with-net: &evm-host-with-net '${EVM_NETWORK:-evm}:${EVM_PROTOCOL:-http}://${EVM_HOST:-evm}:${EVM_PORT:-8545}'
 
 services:
-  buidler:
+  evm:
+    profiles: ["evm", "dev"]
     build:
-      context: ./buidler_docker_image
+      context: ./hardhat_docker_image
       dockerfile: ./Dockerfile
-    command: buidler --config ./buidler.config.js --network buidlerevm node --hostname 0.0.0.0 --port 8545
+    command: hardhat --config ./hardhat.config.js --network hardhat node --hostname 0.0.0.0 --port 8545
     ports:
       - '8545:8545'
+  
+  thegraph-env:
+    image: node:11
+    profiles: ["dev"]
+    command: npm run dev-environment
+    restart: unless-stopped
+    working_dir: /src
+    volumes:
+      - type: bind
+        source: ./
+        target: /src
+    links: 
+      - *evm-host-service
+    environment:
+      TARGET: 'dev'
+      GANACHE_URL: 'http://evm:8545'
+    depends_on:
+      - *evm-host-service
+      - graph-node
+      - ipfs
+
+  graph-node:
+    image: graphprotocol/graph-node
+    depends_on:
+      - db
+      - ipfs
+    ports:
+      - '8000:8000'
+      - '8001:8001'
+      - '8030:8030'
+      - '8020:8020'
+    restart: unless-stopped
+    environment:
+      <<: *graph-pg-base
+      postgres_host: 'db'
+      ipfs: 'ipfs:5001'
+      ethereum: *evm-host-with-net
+      RUST_LOG: 'info'
+      RUST_BACKTRACE: '1'
+
+  ipfs:
+    image: ipfs/go-ipfs:v0.4.23
+    restart: unless-stopped
+    volumes:
+      - type: volume
+        source: graph_ipfs_data
+        target: /data/ipfs
+    ports:
+      - '5001:5001'
+
+  db:
+    image: postgres
+    command: ['postgres', '-cshared_preload_libraries=pg_stat_statements']
+    environment:
+      <<: *graph-pg-base
+    restart: unless-stopped
+    volumes:
+      - type: volume
+        source: graph_pg_data
+        target: /var/lib/postgresql/data
